@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import astro.api.bean.PlanetBean;
-
 public class Util {
 	public static String loadStringFromAssets(String filename) {
 

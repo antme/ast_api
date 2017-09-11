@@ -24,6 +24,7 @@ public class ConfigBean {
 			p = new Properties();
 			try {
 				p.load(ConfigBean.class.getResourceAsStream("/config.properties"));
+				p.load(ConfigBean.class.getResourceAsStream("/com/astrology/i18n/Resources_zh_CN.properties"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

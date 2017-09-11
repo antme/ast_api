@@ -1,0 +1,21 @@
+JAstrology 0.1
+Hello ${model.name} !
+First horoscope
+Date: ${model.formatDate} ${model.timezone.ID}
+Chinese Calendar: ${chineseDate}
+Location：${model.location.name} ${longitude} ${latitude}
+House System：${model.houseSystem}
+Julian Day：${model.julianDay}
+-------------------------------------
+#foreach ($planet in $planets)
+○${planet}
+#end
+-------------------------------------
+ASC Sign：${ascsign}
+#foreach ($house in $houses)
+#if($velocityCount<10)
+0${velocityCount}：${house}
+#else
+${velocityCount}：${house}
+#end
+#end

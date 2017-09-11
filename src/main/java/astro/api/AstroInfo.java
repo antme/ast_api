@@ -1,6 +1,7 @@
 package astro.api;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,17 +10,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+
+import com.astrology.ChartModel;
+import com.astrology.ChartRender;
+import com.astrology.HousesInfo;
+import com.astrology.ImageRender;
+import com.astrology.PlanetInfo;
+import com.astrology.util.DegreeUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import astro.api.bean.Aspect;
-import astro.api.bean.Aspect.AspectType;
-import astro.api.bean.AstrologyResult;
-import astro.api.bean.ConstellationBean;
-import astro.api.bean.HouseBean;
-import astro.api.bean.PlanetBean;
-import astro.api.util.AstrologyImageUtil;
+import astro.api.Aspect.AspectType;
 import de.thmac.swisseph.SweConst;
 import de.thmac.swisseph.SweDate;
 import de.thmac.swisseph.SwissEph;
@@ -33,11 +39,83 @@ public class AstroInfo {
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		longitude = 116.28;// 116 ;
 		latitude = 39.55;
+		//
+		// String json = new Gson()
+		// .toJson(new AstroInfo().getastroinfo(f.parse("2003-09-11 11:49:00"),
+		// longitude, latitude));
+		// System.out.println(json);
 
-		String json = new Gson()
-				.toJson(new AstroInfo().getastroinfo(f.parse("1998-01-01 00:00:00"), longitude, latitude));
-		System.out.println(json);
+		Date date = f.parse("2003-09-11 11:49:00");
 
+		new AstroInfo().parserAstroData(longitude, latitude, date);
+
+	}
+
+	public AstrologyResult parserAstroData(double longitude, double latitude, Date date) {
+		ChartModel model = new ChartModel(date, latitude, longitude);
+
+		AstrologyResult result = new AstrologyResult();
+
+		List<String> xingxinXinzuoResultList = new ArrayList<String>();
+		List<String> xingxinGonweioResultList = new ArrayList<String>();
+
+		PlanetInfo pi[];
+		String planets[];
+
+		String pos[] = new String[12];
+		HousesInfo h = model.getHousesInfo();
+		for (int i1 = 0; i1 < 12; i1++) {
+			pos[i1] = DegreeUtil.format(h.get(i1 + 1), "P");
+
+			String g = "一";
+			int index = i1 + 1;
+			if (index == 1) {
+				g = "一";
+			} else if (index == 2) {
+				g = "二";
+			} else if (index == 3) {
+				g = "三";
+			} else if (index == 4) {
+				g = "四";
+			} else if (index == 5) {
+				g = "五";
+			} else if (index == 6) {
+				g = "六";
+			} else if (index == 7) {
+				g = "七";
+			} else if (index == 8) {
+				g = "八";
+			} else if (index == 9) {
+				g = "九";
+			} else if (index == 10) {
+				g = "十";
+			} else if (index == 11) {
+				g = "十一";
+			} else if (index == 12) {
+				g = "十二";
+			}
+
+			xingxinGonweioResultList.add(g + "宫" + pos[i1]);
+
+		}
+
+		pi = model.getPlanets();
+		planets = new String[pi.length];
+		for (int i = 0; i < pi.length; i++) {
+			PlanetInfo info = pi[i];
+			planets[i] = (ConfigBean.getProperty(info.getPlanetName()) + DegreeUtil.format(info.getLongitude(), "P"));
+			xingxinXinzuoResultList.add(planets[i]);
+
+		}
+		ChartRender render = new ImageRender();
+		String fileName = UUID.randomUUID().toString() + ".png";
+		render.render(model, fileName);
+
+		result.setFileName(fileName);
+		result.setXingxinGonwei(xingxinGonweioResultList);
+		result.setXingxinXingzuo(xingxinXinzuoResultList);
+
+		return result;
 	}
 
 	public AstrologyResult getastroinfo(Date date, double longitude, double latitude) {
@@ -98,6 +176,10 @@ public class AstroInfo {
 			int ret = sw.swe_calc_ut(time, planet, flags, xp, serr);
 			if (ret != flags) {
 			}
+
+			double[] xpin = new double[2];
+			StringBuffer buffer = new StringBuffer();
+			sw.swe_house_pos(time, latitude, 23.26, 'p', xpin, buffer);
 
 			PlanetBean planetBean = Util.getPlanetById(planetList, planet);
 			if (planetBean != null) {
@@ -205,7 +287,8 @@ public class AstroInfo {
 					aspect.deltaDegree = x[0];
 					aspect.deltaMinute = x[1];
 					planetList.get(j).aspects.add(aspect);
-					sb.append(planetList.get(i).chName + " " + aspectType.getName() + " " + planetList.get(j).chName + "\n");
+					sb.append(planetList.get(i).chName + " " + aspectType.getName() + " " + planetList.get(j).chName
+							+ "\n");
 					// xiangWeiResultList.add(e);
 				}
 			}

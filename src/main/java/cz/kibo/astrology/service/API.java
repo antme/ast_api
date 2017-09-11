@@ -1,6 +1,5 @@
 package cz.kibo.astrology.service;
 
-import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.internalServerError;
 import static spark.Spark.notFound;
@@ -14,7 +13,6 @@ import com.google.gson.Gson;
 
 import astro.api.AstroInfo;
 import astro.api.ConfigBean;
-import cz.kibo.astrology.service.exception.ValidationException;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -70,21 +68,18 @@ public class API {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 
 				response.status(200);
 				response.type("application/json");
 				// response.header("Content-Encoding", "UTF-8");
 
-				String json = new Gson().toJson(new AstroInfo().getastroinfo(birthday, longitude, latitude));
+			
+				String json = new Gson().toJson(new AstroInfo().parserAstroData(longitude, latitude, birthday));
 				return new String(json.getBytes("UTF-8"));
 			}
 		});
 
-		exception(ValidationException.class, (exception, req, res) -> {
-			res.status(200);
-			res.type("application/json");
-			res.body("{\"error\":\"" + exception.getMessage() + "\"}");
-		});
 
 		// code 404
 		notFound((req, res) -> {
