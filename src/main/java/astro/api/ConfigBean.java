@@ -36,6 +36,15 @@ public class ConfigBean {
 				p.put("pic_path", "/opt/lampp/htdocs/sites/default/files/xingpan/");
 			}
 
+			intialGpsMap();
+
+		}
+		return p.getProperty(key);
+	}
+
+	private static void intialGpsMap() {
+
+		if (gpsMap.isEmpty()) {
 			BufferedReader reader = new BufferedReader(
 					new InputStreamReader(ConfigBean.class.getResourceAsStream("/gps.txt")));
 			try {
@@ -43,7 +52,7 @@ public class ConfigBean {
 				while (line != null) {
 
 					String[] lines = line.split(" ");
-					if (lines.length > 1) {
+					if (lines.length > 2) {
 						gpsMap.put(lines[0], lines[1] + " " + lines[2]);
 					}
 
@@ -54,9 +63,7 @@ public class ConfigBean {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
-		return p.getProperty(key);
 	}
 
 	/**
@@ -82,10 +89,11 @@ public class ConfigBean {
 	}
 
 	private static double parserGpsInfo(String area, int type) {
+		intialGpsMap();
 		String[] areas = area.split(" ");
 
 		if (areas.length > 2) {
-			String province = areas[type].replaceAll("省", "").replaceAll("市", "");
+			String province = areas[0].replaceAll("省", "").replaceAll("市", "");
 			String shi = areas[1].replaceAll("市", "");
 			String city = areas[2].replaceAll("县", "");
 
