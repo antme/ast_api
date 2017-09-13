@@ -53,7 +53,7 @@ public class ChartOptions
 	{
 		houseSystem = 80;
 		nono_true_mode = false;
-		size = new java.awt.Dimension(640, 640);
+		size = new java.awt.Dimension(580, 580);
 	}
 
 	public void setHouseSystem(int houseSystem)

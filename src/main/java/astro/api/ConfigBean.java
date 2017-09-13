@@ -41,6 +41,16 @@ public class ConfigBean {
 		}
 		return p.getProperty(key);
 	}
+	
+	
+	public static String getCnName(String key) { 
+		String value = getProperty(key);
+		if(value!=null) {
+			return value;
+		}
+		
+		return key;
+	}
 
 	private static void intialGpsMap() {
 
@@ -94,7 +104,7 @@ public class ConfigBean {
 
 		if (areas.length > 2) {
 			String province = areas[0].replaceAll("省", "").replaceAll("市", "");
-			String shi = areas[1].replaceAll("市", "");
+			String shi = areas[1].replaceAll("市", "").replaceAll("区", "").replaceAll("新区", "");
 			String city = areas[2].replaceAll("县", "");
 
 			String gps = gpsMap.get(province + city);

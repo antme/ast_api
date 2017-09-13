@@ -1,7 +1,6 @@
 package astro.api;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,17 +11,12 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-
 import com.astrology.ChartModel;
 import com.astrology.ChartRender;
 import com.astrology.HousesInfo;
 import com.astrology.ImageRender;
 import com.astrology.PlanetInfo;
 import com.astrology.util.DegreeUtil;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import astro.api.Aspect.AspectType;
@@ -95,7 +89,7 @@ public class AstroInfo {
 				g = "十二";
 			}
 
-			xingxinGonweioResultList.add(g + "宫" + pos[i1]);
+			xingxinGonweioResultList.add(g + "宫" + ConfigBean.getCnName(pos[i1]));
 
 		}
 
@@ -103,7 +97,7 @@ public class AstroInfo {
 		planets = new String[pi.length];
 		for (int i = 0; i < pi.length; i++) {
 			PlanetInfo info = pi[i];
-			planets[i] = (ConfigBean.getProperty(info.getPlanetName()) + DegreeUtil.format(info.getLongitude(), "P"));
+			planets[i] = (ConfigBean.getCnName(info.getPlanetName()) + ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P")));
 			xingxinXinzuoResultList.add(planets[i]);
 
 		}
@@ -114,7 +108,15 @@ public class AstroInfo {
 		result.setFileName(fileName);
 		result.setXingxinGonwei(xingxinGonweioResultList);
 		result.setXingxinXingzuo(xingxinXinzuoResultList);
+		
+		for(String r: xingxinGonweioResultList) {
+			System.out.println(r);
+		}
 
+		for(String r: xingxinXinzuoResultList) {
+			System.out.println(r);
+		}
+		
 		return result;
 	}
 
