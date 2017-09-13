@@ -5,20 +5,31 @@
 
 package com.astrology;
 
-import astro.api.ConfigBean;
-
-import java.awt.*;
-import java.awt.geom.Ellipse2D;
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Stroke;
+import java.awt.TexturePaint;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
 import com.astrology.util.DegreeUtil;
+
+import astro.api.ConfigBean;
 
 // Referenced classes of package com.astrology:
 //			ChartRender, Config, ChartModel, HousesInfo, 
@@ -57,7 +68,7 @@ public class DefaultRender implements ChartRender {
 		ratio = height / width;
 		this.g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		this.g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		drawBackground();
+		//drawBackground();
 		drawConstellations(model);
 		drawPlanets(model);
 		drawRelations(model);
@@ -304,17 +315,18 @@ public class DefaultRender implements ChartRender {
 	}
 
 	public Object render(ChartModel model, String fileName) {
-
 		Dimension size = model.getSize();
-		BufferedImage image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = image.createGraphics();
 
-		//image = g.getDeviceConfiguration().createCompatibleImage(size.width, size.height, Transparency.TRANSLUCENT);
+		BufferedImage image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = image.createGraphics();
+		g.setComposite(AlphaComposite.Clear);
+		g.fillRect(0, 0, size.width, size.height);
+
 
 		render(model, g, size.width, size.height);
 		g.dispose();
 		try {
-			ImageIO.write(image, "PNG", new File(ConfigBean.getProperty("pic_path") + fileName));
+			ImageIO.write(image, "png", new File(ConfigBean.getProperty("pic_path") + fileName));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

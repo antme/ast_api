@@ -150,7 +150,7 @@
 									<transformers>
 										<transformer
 											implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-											<mainClass>com.astrology.gui.Chat</mainClass>
+											<mainClass>cz.kibo.astrology.service.Bootstrap</mainClass>
 										</transformer>
 									</transformers>
 								</configuration>

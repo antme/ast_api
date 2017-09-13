@@ -11,69 +11,76 @@ import com.astrology.ChartModel;
 import com.astrology.Config;
 import com.astrology.StringRender;
 
+import astro.api.ConfigBean;
 import junit.framework.TestCase;
 
 // Referenced classes of package com.astrology:
 //			ChartModel, Config, StringRender
 
-public class TestChartModel extends TestCase
-{
+public class TestChartModel extends TestCase {
 
-	public TestChartModel()
-	{
+	public TestChartModel() {
 	}
 
-	protected void setUp()
-		throws Exception
-	{
+	protected void setUp() throws Exception {
 		super.setUp();
 	}
 
-//	public void testChartModel()
-//	{
-//		ChartModel model = new ChartModel(new Date(), 39.920000000000002D, 116.45999999999999D);
-//		Assert.assertFalse(model.isCflag());
-//		double jd = model.getJulianDay();
-//		Assert.assertTrue(model.isCflag());
-//		model.setDate(new Date());
-//		Assert.assertFalse(model.isCflag());
-//		HousesInfo hi = model.getHousesInfo();
-//		Assert.assertTrue(model.isCflag());
-//	}
+	// public void testChartModel()
+	// {
+	// ChartModel model = new ChartModel(new Date(), 39.920000000000002D,
+	// 116.45999999999999D);
+	// Assert.assertFalse(model.isCflag());
+	// double jd = model.getJulianDay();
+	// Assert.assertTrue(model.isCflag());
+	// model.setDate(new Date());
+	// Assert.assertFalse(model.isCflag());
+	// HousesInfo hi = model.getHousesInfo();
+	// Assert.assertTrue(model.isCflag());
+	// }
 
-//	public void testVelocity()
-//		throws Exception
-//	{
-//		Config.initVelocity();
-//		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		ChartModel model = new ChartModel(formatter.parse("2003-09-11 11:00:00"), 39.920000000000002D, 116.45999999999999D);
-//		model.setName("����");
-//		String positions[] = model.getHousesPosition();
-//		VelocityContext context = new VelocityContext();
-//		context.put("julianDay", Double.valueOf(model.getJulianDay()));
-//		context.put("latitude", Double.valueOf(model.getLatitude()));
-//		context.put("longitude", Double.valueOf(model.getLongitude()));
-//		context.put("houses", model.getHousesPosition());
-//		context.put("planets", model.getPlanets());
-//		try
-//		{
-//			Template template = Velocity.getTemplate("astrology.xml.vm");
-//			Writer writer = new PrintWriter(System.out);
-//			template.merge(context, writer);
-//			writer.flush();
-//		}
-//		catch (Exception e)
-//		{
-//			Assert.fail(e.toString());
-//		}
-//	}
+	// public void testVelocity()
+	// throws Exception
+	// {
+	// Config.initVelocity();
+	// SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	// ChartModel model = new ChartModel(formatter.parse("2003-09-11 11:00:00"),
+	// 39.920000000000002D, 116.45999999999999D);
+	// model.setName("����");
+	// String positions[] = model.getHousesPosition();
+	// VelocityContext context = new VelocityContext();
+	// context.put("julianDay", Double.valueOf(model.getJulianDay()));
+	// context.put("latitude", Double.valueOf(model.getLatitude()));
+	// context.put("longitude", Double.valueOf(model.getLongitude()));
+	// context.put("houses", model.getHousesPosition());
+	// context.put("planets", model.getPlanets());
+	// try
+	// {
+	// Template template = Velocity.getTemplate("astrology.xml.vm");
+	// Writer writer = new PrintWriter(System.out);
+	// template.merge(context, writer);
+	// writer.flush();
+	// }
+	// catch (Exception e)
+	// {
+	// Assert.fail(e.toString());
+	// }
+	// }
 
-	public void testInfo()
-		throws Exception
-	{
+	public void testInfo() throws Exception {
 		Config.initVelocity();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		ChartModel model = new ChartModel(formatter.parse("2003-09-11 11:00:00"), 39.55, 116.28);
+		String address = "上海 浦东 XX ";
+
+		String date = "2003-09-11 11:00:00";
+//		 ChartModel model = new ChartModel(formatter.parse(date),
+//		 ConfigBean.getLatitude(address),
+//		 ConfigBean.getLongitude(address));
+		
+		System.out.println(ConfigBean.getLatitude(address));
+		System.out.println(ConfigBean.getLongitude(address));
+		ChartModel model = new ChartModel(formatter.parse(date),40.08, 117.06);
+
 		model.setName("dylan");
 		StringRender render = new StringRender();
 		System.out.println(render.render(model, null));

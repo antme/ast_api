@@ -13,6 +13,8 @@ import java.util.Arrays;
 
 import com.astrology.util.DegreeUtil;
 
+import astro.api.ConfigBean;
+
 // Referenced classes of package com.astrology:
 //			DefaultRender, ChartModel, Config, HousesInfo, 
 //			PlanetInfo, Constellation
@@ -69,14 +71,15 @@ public class ImageRender extends DefaultRender
 				a2 += 5D;
 			if (Math.abs(planets[i].compareTo(p2)) < 10)
 				a2 -= 5D;
-			Color color = getConfig().getColor(planets[i].getPlanetName());
+			String planetName = planets[i].getPlanetName();
+			Color color = getConfig().getColor(planetName);
 			drawCross(2.0F, r6, angle, normalStroke, color);
 			drawLine(r5, a2, r6 + 5F, angle, normalStroke, basecolor);
-			BufferedImage image = getConfig().getImage((new StringBuilder("p")).append(planets[i].getId()).toString());
-			if (image == null)
-				drawString(planets[i].getPlanetName(), r5, a2, color, font);
-			else
-				drawImage(image, r5, a2);
+			//BufferedImage image = getConfig().getImage((new StringBuilder("p")).append(planets[i].getId()).toString());
+			//if (image == null)
+				drawString(ConfigBean.getCnName(planetName), r5, a2, color, font);
+			//else
+				//drawImage(image, r5, a2);
 		}
 
 	}
@@ -125,6 +128,8 @@ public class ImageRender extends DefaultRender
 		double a0 = DegreeUtil.d2R(DegreeUtil.transfer(0.0D, asc));
 		AffineTransform at = AffineTransform.getRotateInstance(0.0D - a0, cx, cy);
 		g.transform(at);
+		g.setComposite(AlphaComposite.Src);
+
 		g.drawImage(img, 0, 0, (int)width, (int)height, null);
 		at = AffineTransform.getRotateInstance(a0, cx, cy);
 		g.transform(at);
