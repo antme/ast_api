@@ -63,7 +63,8 @@ public class API {
 				}
 				Date birthday = null;
 				try {
-					birthday = f.parse(request.queryParams("birthday"));
+					String queryParams = request.queryParams("birthday") + ":00";
+					birthday = f.parse(queryParams);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
