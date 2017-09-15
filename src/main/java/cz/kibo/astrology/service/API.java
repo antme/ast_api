@@ -42,7 +42,6 @@ public class API {
 
 			@Override
 			public Object handle(Request request, Response response) throws Exception {
-				SimpleDateFormat f = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 				double longitude = 0;
 				double latitude = 0;
 
@@ -61,26 +60,33 @@ public class API {
 					longitude = ConfigBean.getLongitude(address);
 					latitude = ConfigBean.getLatitude(address);
 				}
+
+				String queryParams = request.queryParams("birthday") + ":00";
+
+				SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+				if (queryParams.indexOf("/") != -1) {
+					f = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+				}
+
 				Date birthday = null;
 				try {
-					String queryParams = request.queryParams("birthday") + ":00";
 					birthday = f.parse(queryParams);
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-				
 
+				}
+
+				System.out.println(queryParams + " lng=" + ConfigBean.getLongitude(address) + "  lat="
+						+ ConfigBean.getLatitude(address));
 				response.status(200);
 				response.type("application/json");
 				// response.header("Content-Encoding", "UTF-8");
 
-			
 				String json = new Gson().toJson(new AstroInfo().parserAstroData(longitude, latitude, birthday));
 				return new String(json.getBytes("UTF-8"));
 			}
 		});
-
 
 		// code 404
 		notFound((req, res) -> {

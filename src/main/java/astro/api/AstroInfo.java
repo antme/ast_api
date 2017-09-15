@@ -38,10 +38,17 @@ public class AstroInfo {
 		// .toJson(new AstroInfo().getastroinfo(f.parse("2003-09-11 11:49:00"),
 		// longitude, latitude));
 		// System.out.println(json);
+		
+	
+//			System.out.println(ConfigBean.getLongitude("浙江省  温州市 瑞安市"));
+//			System.out.println( ConfigBean.getLatitude("浙江省  温州市 瑞安市"));
+	
 
-		Date date = f.parse("2003-09-11 11:49:00");
+		Date date = f.parse("1983-10-01 22:00:00");
+		
+		System.out.println(UUID.randomUUID().toString());
 
-		new AstroInfo().parserAstroData(longitude, latitude, date);
+		new AstroInfo().parserAstroData(ConfigBean.getLongitude("内蒙古自治区 呼和浩特市 和林格尔县"), ConfigBean.getLatitude("内蒙古自治区 呼和浩特市 和林格尔县"), date);
 
 	}
 
@@ -90,7 +97,9 @@ public class AstroInfo {
 			}
 
 			xingxinGonweioResultList.add(g + "宫" + ConfigBean.getCnName(pos[i1]));
-
+			xingxinGonweioResultList.add(g + "宫" + ConfigBean.getCnName(pos[i1])+"座");
+			xingxinGonweioResultList.add(ConfigBean.getCnName(pos[i1]) + g + "宫");
+			xingxinGonweioResultList.add(ConfigBean.getCnName(pos[i1]) + "座" + g + "宫");
 		}
 
 		pi = model.getPlanets();
@@ -98,7 +107,16 @@ public class AstroInfo {
 		for (int i = 0; i < pi.length; i++) {
 			PlanetInfo info = pi[i];
 			planets[i] = (ConfigBean.getCnName(info.getPlanetName()) + ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P")));
+			
+			
 			xingxinXinzuoResultList.add(planets[i]);
+			
+			xingxinXinzuoResultList.add(ConfigBean.getCnName(info.getPlanetName()) + ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P") + "座"));
+			
+			xingxinXinzuoResultList.add( ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P") + "座" + ConfigBean.getCnName(info.getPlanetName())));
+
+			xingxinXinzuoResultList.add(ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P")) + ConfigBean.getCnName(info.getPlanetName()));
+
 
 		}
 		ChartRender render = new ImageRender();

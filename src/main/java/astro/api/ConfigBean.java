@@ -6,7 +6,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -102,12 +104,29 @@ public class ConfigBean {
 		intialGpsMap();
 		String[] areas = area.split(" ");
 
-		if (areas.length > 2) {
+		List<String> finalAreals = new ArrayList<String>();
+		for(String a: areas) {
+			if(a.length() > 0) {
+				finalAreals.add(a);
+			}
+		}
+		
+		areas = new String[finalAreals.size()];
+		int i = 0;
+		for(String a: finalAreals) {
+			areas[i] = a;
+			i++;
+		}
+		if (areas.length > 1) {
 			String province = areas[0].replaceAll("省", "").replaceAll("市", "");
 			String shi = areas[1].replaceAll("市", "").replaceAll("区", "").replaceAll("新区", "");
-			String city = areas[2].replaceAll("县", "");
+			String gps = null;
+			if(areas.length>2) {
+				String city = areas[2].replaceAll("县", "");
+				gps = gpsMap.get(province + city);
+			}
+			
 
-			String gps = gpsMap.get(province + city);
 			if (gps != null) {
 
 				return Double.parseDouble(gps.split(" ")[type].trim());
