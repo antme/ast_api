@@ -1,6 +1,5 @@
 package astro.api;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,35 +28,25 @@ import de.thmac.swisseph.SwissEph;
 public class AstroInfo {
 
 	public static void main(String args[]) throws ParseException {
-		double longitude;
-		double latitude;
-
-		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		longitude = 116.28;// 116 ;
-		latitude = 39.55;
-		//
-		// String json = new Gson()
-		// .toJson(new AstroInfo().getastroinfo(f.parse("2003-09-11 11:49:00"),
-		// longitude, latitude));
-		// System.out.println(json);
 		
-	
-//			System.out.println(ConfigBean.getLongitude("浙江省  温州市 瑞安市"));
-//			System.out.println( ConfigBean.getLatitude("浙江省  温州市 瑞安市"));
-	
-
-		Date date = f.parse("1988-10-01 22:00:00");
 		
-		System.out.println(UUID.randomUUID().toString());
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	    new AstroInfo().parserAstroData(ConfigBean.getLongitude("内蒙古自治区 呼和浩特市 和林格尔县"), ConfigBean.getLatitude("内蒙古自治区 呼和浩特市 和林格尔县"), date);
+		Date date = formatter.parse("1988-10-01 22:00:00");
+		
 
-		//new AstroInfo().getastroinfo(date, ConfigBean.getLongitude("内蒙古自治区 呼和浩特市 和林格尔县"), ConfigBean.getLatitude("内蒙古自治区 呼和浩特市 和林格尔县"));
+	   //new AstroInfo().parserAstroData(ConfigBean.getLongitude("内蒙古自治区 呼和浩特市 和林格尔县"), ConfigBean.getLatitude("内蒙古自治区 呼和浩特市 和林格尔县"), date);
+	    //new AstroInfo().parserAstroData(ConfigBean.getLongitude("上海 宝山"), ConfigBean.getLatitude("上海 宝山"), date);
+	    new AstroInfo().parserAstroData(111.39d, 40.49d, date);
+	    
+		
 	}
 
 	public AstrologyResult parserAstroData(double longitude, double latitude, Date date) {
 		ChartModel model = new ChartModel(date, latitude, longitude);
+		//ChartModel model = new ChartModel(date, 40.49, 113.39);
 
+		System.out.println(model.getJulianDay() + ":" + longitude + ":" + latitude);
 		AstrologyResult result = new AstrologyResult();
 
 		List<String> xingxinXinzuoResultList = new ArrayList<String>();
@@ -73,8 +62,10 @@ public class AstroInfo {
 		String pos[] = new String[12];
 		HousesInfo h = model.getHousesInfo();
 		for (int i1 = 0; i1 < 12; i1++) {
+			//pos[i1] = DegreeUtil.format(h.get(i1 + 1), "P h°m′");
 			pos[i1] = DegreeUtil.format(h.get(i1 + 1), "P");
 
+			System.out.println(pos[i1]);
 			String g = "一";
 			int index = i1 + 1;
 			if (index == 1) {
@@ -102,7 +93,7 @@ public class AstroInfo {
 			} else if (index == 12) {
 				g = "十二";
 			}
-			gonweiXingzuoResultList.add(g + "宫" + ConfigBean.getCnName(pos[i1]) );
+			gonweiXingzuoResultList.add(g + "宫" + ConfigBean.getCnName(pos[i1]));
 			
 			gwxzMap.put(ConfigBean.getCnName(pos[i1]),g + "宫");
 			
@@ -176,7 +167,7 @@ public class AstroInfo {
 
 		sb1.append(formatter.format(SweDate.getDate(time)) + "," + time);
 
-		System.out.println(sb1.toString());
+		//System.out.println(sb1.toString());
 
 		int result = sw.swe_houses(sd.getJulDay(), 0, latitude, longitude, 'P', cusps, acsc);
 
@@ -187,7 +178,7 @@ public class AstroInfo {
 		for (int i = 1; i < 13; i++) {
 			HouseBean bean = new HouseBean(i, "", "", cusps[i]);
 			houseBeans.add(bean);
-			System.out.println(i + "->>" + cusps[i]);
+			//System.out.println(i + "->>" + cusps[i]);
 		}
 
 		int[] planets = { SweConst.SE_SUN, SweConst.SE_MOON, SweConst.SE_MERCURY, SweConst.SE_VENUS, SweConst.SE_MARS,
@@ -222,10 +213,9 @@ public class AstroInfo {
 			if (planetBean != null) {
 				planetBean.angle = xp[0];
 
-				System.out.println(planetBean.enName + "(" + planetBean.chName + ") angle = " + planetBean.angle
-						+ ", retrograde=" + xp[3]);
+				//System.out.println(planetBean.enName + "(" + planetBean.chName + ") angle = " + planetBean.angle + ", retrograde=" + xp[3]);
 			} else {
-				System.err.println("planet = " + planet);
+				//System.err.println("planet = " + planet);
 			}
 
 		}
@@ -331,23 +321,23 @@ public class AstroInfo {
 			}
 		}
 
-		System.out.println(sb.toString());
+		//System.out.println(sb.toString());
 
 		AstrologyResult astrologyResult = new AstrologyResult();
 
-		try {
-			String imageFileName = new AstrologyImageUtil().drawImage(houseBeans, planetList);
-			astrologyResult.setFileName(imageFileName);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			String imageFileName = new AstrologyImageUtil().drawImage(houseBeans, planetList);
+//			astrologyResult.setFileName(imageFileName);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		astrologyResult.setXingxinGonwei(xingxinGonweioResultList);
 		astrologyResult.setXingxinXingzuo(xingxinXinzuoResultList);
 		astrologyResult.setGonweiXingzuo(gonweiXingzuoResultList);
 
-		System.out.println(astrologyResult);
+		//System.out.println(astrologyResult);
 		return xiangWeiResultList;
 	}
 

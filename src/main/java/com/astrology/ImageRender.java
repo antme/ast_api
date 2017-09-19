@@ -72,6 +72,9 @@ public class ImageRender extends DefaultRender
 			if (Math.abs(planets[i].compareTo(p2)) < 10)
 				a2 -= 5D;
 			String planetName = planets[i].getPlanetName();
+			
+			
+			if(!isPlanetIgnored(ConfigBean.getCnName(planetName))) {
 			Color color = getConfig().getColor(planetName);
 			drawCross(2.0F, r6, angle, normalStroke, color);
 			drawLine(r5, a2, r6 + 5F, angle, normalStroke, basecolor);
@@ -80,6 +83,8 @@ public class ImageRender extends DefaultRender
 				drawString(ConfigBean.getCnName(planetName).substring(0, 1), r5, a2, color, font);
 			//else
 				//drawImage(image, r5, a2);
+				
+			}
 		}
 
 	}

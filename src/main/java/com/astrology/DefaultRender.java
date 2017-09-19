@@ -210,6 +210,7 @@ public class DefaultRender implements ChartRender {
 		double asc = hi.getAscendant();
 		for (int i = 0; i < count; i++) {
 			for (int j = i + 1; j < count; j++)
+				if(!isPlanetIgnored(planets[i].getPlanetName()) && !isPlanetIgnored(planets[j].getPlanetName())) {
 				if ((planets[i].getId() >= 0 || planets[i].getId() == -99 || planets[i].getId() == -90)
 						&& (planets[j].getId() >= 0 || planets[j].getId() == -99 || planets[j].getId() == -90)
 						&& (planets[i].getId() != -99 || planets[j].getId() != -90)
@@ -225,9 +226,17 @@ public class DefaultRender implements ChartRender {
 						drawLine(r6, planets[i].getTransferedLongitude(asc), r6, planets[j].getTransferedLongitude(asc),stroke,  new Color(220,238,255));
 					}
 				}
+				
+				}
 
 		}
 
+	}
+	
+	protected boolean isPlanetIgnored(String planetName) {
+		planetName = ConfigBean.getCnName(planetName);
+		return planetName.startsWith("福") || planetName.startsWith("灶") || planetName.startsWith("智")
+				|| planetName.startsWith("凯") || planetName.startsWith("莉莉")|| planetName.startsWith("婚") || planetName.startsWith("谷");
 	}
 
 	protected void drawOval(float r, Stroke stroke, Color color) {
