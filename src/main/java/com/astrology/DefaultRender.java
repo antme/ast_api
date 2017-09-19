@@ -222,8 +222,7 @@ public class DefaultRender implements ChartRender {
 						else
 							stroke = boldStroke;
 						Color color = getConfig().getColor(r.name);
-						drawLine(r6, planets[i].getTransferedLongitude(asc), r6, planets[j].getTransferedLongitude(asc),
-								stroke, color);
+						drawLine(r6, planets[i].getTransferedLongitude(asc), r6, planets[j].getTransferedLongitude(asc),stroke,  new Color(220,238,255));
 					}
 				}
 

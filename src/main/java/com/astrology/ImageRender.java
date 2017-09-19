@@ -77,7 +77,7 @@ public class ImageRender extends DefaultRender
 			drawLine(r5, a2, r6 + 5F, angle, normalStroke, basecolor);
 			//BufferedImage image = getConfig().getImage((new StringBuilder("p")).append(planets[i].getId()).toString());
 			//if (image == null)
-				drawString(ConfigBean.getCnName(planetName), r5, a2, color, font);
+				drawString(ConfigBean.getCnName(planetName).substring(0, 1), r5, a2, color, font);
 			//else
 				//drawImage(image, r5, a2);
 		}
@@ -120,6 +120,9 @@ public class ImageRender extends DefaultRender
 		float r4 = cfg.getFloat("r4", 0.65F);
 		if ((double)r4 < 1.0D)
 			r4 = cx * r4;
+		
+		r3 = 242;
+		r4 = 222;
 		Color basecolor = cfg.getColor("base");
 		Color weakcolor = cfg.getColor("weak");
 		double asc = hi.getAscendant();
@@ -162,10 +165,11 @@ public class ImageRender extends DefaultRender
 				angle2 = thi.get(1);
 			double delta = angle2 - angle;
 			delta = DegreeUtil.fixAngle(delta);
-			drawLine(r3, r4, angle, normalStroke, basecolor);
+			drawLine(r3, r4, angle, normalStroke, new Color(220,238,255));
 //			if (i % 3 != 1)
 //				drawLine(r4, 0.0F, angle, dashStroke, weakcolor);
-			drawString(Integer.toString(i), (r3 + r4) / 2.0F, angle + delta / 2D, cfg.getColor(Constellation.POLLUXS[i - 1]), basefont);
+			drawString(Integer.toString(i), (r3 + r4) / 2.0F, angle + delta / 2D, Color.WHITE, basefont);
+			//drawString(Integer.toString(i), (r3 + r4) / 2.0F, angle + delta / 2D, cfg.getColor(Constellation.POLLUXS[i - 1]), basefont);
 		}
 
 	}

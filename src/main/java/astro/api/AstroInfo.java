@@ -7,7 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -44,12 +46,13 @@ public class AstroInfo {
 //			System.out.println( ConfigBean.getLatitude("浙江省  温州市 瑞安市"));
 	
 
-		Date date = f.parse("1983-10-01 22:00:00");
+		Date date = f.parse("1988-10-01 22:00:00");
 		
 		System.out.println(UUID.randomUUID().toString());
 
-		new AstroInfo().parserAstroData(ConfigBean.getLongitude("内蒙古自治区 呼和浩特市 和林格尔县"), ConfigBean.getLatitude("内蒙古自治区 呼和浩特市 和林格尔县"), date);
+	    new AstroInfo().parserAstroData(ConfigBean.getLongitude("内蒙古自治区 呼和浩特市 和林格尔县"), ConfigBean.getLatitude("内蒙古自治区 呼和浩特市 和林格尔县"), date);
 
+		//new AstroInfo().getastroinfo(date, ConfigBean.getLongitude("内蒙古自治区 呼和浩特市 和林格尔县"), ConfigBean.getLatitude("内蒙古自治区 呼和浩特市 和林格尔县"));
 	}
 
 	public AstrologyResult parserAstroData(double longitude, double latitude, Date date) {
@@ -58,11 +61,15 @@ public class AstroInfo {
 		AstrologyResult result = new AstrologyResult();
 
 		List<String> xingxinXinzuoResultList = new ArrayList<String>();
-		List<String> xingxinGonweioResultList = new ArrayList<String>();
+		List<String> gonweiXingzuoResultList = new ArrayList<String>();
+		
+		List<String> xingxinGonweiResultList = new ArrayList<String>();
+
 
 		PlanetInfo pi[];
 		String planets[];
 
+		Map<String, String> gwxzMap = new HashMap<String, String>();
 		String pos[] = new String[12];
 		HousesInfo h = model.getHousesInfo();
 		for (int i1 = 0; i1 < 12; i1++) {
@@ -95,28 +102,27 @@ public class AstroInfo {
 			} else if (index == 12) {
 				g = "十二";
 			}
-
-			xingxinGonweioResultList.add(g + "宫" + ConfigBean.getCnName(pos[i1]));
-			xingxinGonweioResultList.add(g + "宫" + ConfigBean.getCnName(pos[i1])+"座");
-			xingxinGonweioResultList.add(ConfigBean.getCnName(pos[i1]) + g + "宫");
-			xingxinGonweioResultList.add(ConfigBean.getCnName(pos[i1]) + "座" + g + "宫");
+			gonweiXingzuoResultList.add(g + "宫" + ConfigBean.getCnName(pos[i1]) );
+			
+			gwxzMap.put(ConfigBean.getCnName(pos[i1]),g + "宫");
+			
 		}
 
 		pi = model.getPlanets();
 		planets = new String[pi.length];
 		for (int i = 0; i < pi.length; i++) {
 			PlanetInfo info = pi[i];
-			planets[i] = (ConfigBean.getCnName(info.getPlanetName()) + ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P")));
-			
-			
+			String xingzuo = ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P"));
+			String xingxing = ConfigBean.getCnName(info.getPlanetName());
+			planets[i] = xingxing + xingzuo;	
 			xingxinXinzuoResultList.add(planets[i]);
-			
-			xingxinXinzuoResultList.add(ConfigBean.getCnName(info.getPlanetName()) + ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P") + "座"));
-			
-			xingxinXinzuoResultList.add( ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P") + "座" + ConfigBean.getCnName(info.getPlanetName())));
-
-			xingxinXinzuoResultList.add(ConfigBean.getCnName(DegreeUtil.format(info.getLongitude(), "P")) + ConfigBean.getCnName(info.getPlanetName()));
-
+		
+			String gw = gwxzMap.get(xingzuo);
+			if (gw != null) {
+				xingxinGonweiResultList.add(xingxing + gw);
+			}else {
+				System.out.println(xingxing + "的宫位为空");
+			}
 
 		}
 		ChartRender render = new ImageRender();
@@ -124,14 +130,19 @@ public class AstroInfo {
 		render.render(model, fileName);
 
 		result.setFileName(fileName);
-		result.setXingxinGonwei(xingxinGonweioResultList);
+		result.setXingxinGonwei(xingxinGonweiResultList);
 		result.setXingxinXingzuo(xingxinXinzuoResultList);
+		result.setGonweiXingzuo(gonweiXingzuoResultList);
 		
-		for(String r: xingxinGonweioResultList) {
+		for(String r: gonweiXingzuoResultList) {
 			System.out.println(r);
 		}
 
 		for(String r: xingxinXinzuoResultList) {
+			System.out.println(r);
+		}
+		
+		for(String r: xingxinGonweiResultList) {
 			System.out.println(r);
 		}
 		
@@ -307,8 +318,7 @@ public class AstroInfo {
 					aspect.deltaDegree = x[0];
 					aspect.deltaMinute = x[1];
 					planetList.get(j).aspects.add(aspect);
-					sb.append(planetList.get(i).chName + " " + aspectType.getName() + " " + planetList.get(j).chName
-							+ "\n");
+					sb.append(planetList.get(i).chName + " " + aspectType.getName() + " " + planetList.get(j).chName + "\n");
 					// xiangWeiResultList.add(e);
 				}
 			}
