@@ -5,14 +5,22 @@ import java.util.List;
 public class AstrologyResult {
 
 	private List<String> xingxinXingzuo;
-
 	private List<String> xingxinGonwei;
 	private List<String> gonweiXingzuo;
-	
+	private List<String> xiangwei;
 
 	private String fileName;
 	
 	
+	
+
+	public List<String> getXiangwei() {
+		return xiangwei;
+	}
+
+	public void setXiangwei(List<String> xiangwei) {
+		this.xiangwei = xiangwei;
+	}
 
 	public List<String> getGonweiXingzuo() {
 		return gonweiXingzuo;

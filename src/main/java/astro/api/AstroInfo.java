@@ -133,6 +133,7 @@ public class AstroInfo {
 		result.setXingxinGonwei(xingxinGonweiResultList);
 		result.setXingxinXingzuo(xingxinXinzuoResultList);
 		result.setGonweiXingzuo(gonweiXingzuoResultList);
+		result.setXiangwei(getastroinfo(date, longitude, latitude));
 		
 		for(String r: gonweiXingzuoResultList) {
 			System.out.println(r);
@@ -146,10 +147,15 @@ public class AstroInfo {
 			System.out.println(r);
 		}
 		
+		for(String r: result.getXiangwei()) {
+			System.out.println(r);
+		}
+		
+		
 		return result;
 	}
 
-	public AstrologyResult getastroinfo(Date date, double longitude, double latitude) {
+	public  List<String>  getastroinfo(Date date, double longitude, double latitude) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 
@@ -285,7 +291,7 @@ public class AstroInfo {
 		// }
 		//
 
-		// List<String> xiangWeiResultList = new ArrayList<String>();
+		 List<String> xiangWeiResultList = new ArrayList<String>();
 		sb.append("\n===行星-行星相位=========\n");
 		for (int i = 0; i < planetList.size() - 1; i++) {
 			for (int j = i + 1; j < planetList.size(); j++) {
@@ -318,8 +324,9 @@ public class AstroInfo {
 					aspect.deltaDegree = x[0];
 					aspect.deltaMinute = x[1];
 					planetList.get(j).aspects.add(aspect);
-					sb.append(planetList.get(i).chName + " " + aspectType.getName() + " " + planetList.get(j).chName + "\n");
-					// xiangWeiResultList.add(e);
+					String xw = planetList.get(i).chName  + aspectType.getName() + ConfigBean.getCnName(planetList.get(j).chName);
+					sb.append(xw + "\n");
+					 xiangWeiResultList.add(xw);
 				}
 			}
 		}
@@ -341,7 +348,7 @@ public class AstroInfo {
 		astrologyResult.setGonweiXingzuo(gonweiXingzuoResultList);
 
 		System.out.println(astrologyResult);
-		return astrologyResult;
+		return xiangWeiResultList;
 	}
 
 	public int loadHource(PlanetBean plannet, List<HouseBean> hourses) {
